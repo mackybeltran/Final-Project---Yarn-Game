@@ -27,11 +27,25 @@ class PanelsController < ApplicationController
       render json: {status: 'SUCCESS', message: 'Loaded panel', data: @panel}, status: :ok
   end
 
+  def destroy
+    @panel = Panel.find(panel_params[:id])
+    @choice = Choice.where(path_to: panel_params[:id])[0]
+    @choice.destroy
+    @panel.destroy
+
+
+  end
+
+  def chartshow
+    @panel = Panel.where(story_id: params[:story_id]).where(index: params[:index])
+    render json: {status: 'SUCCESS', message: 'Loaded panel', data: @panel}, status: :ok
+  end
+
   private
 
     def panel_params
 
-    params.require(:panel).permit(:id, :image, :body_text, :panel_title, :story_id)
+    params.require(:panel).permit(:id, :image, :body_text, :panel_title, :story_id, :index)
 
 
   end
